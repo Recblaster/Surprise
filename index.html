@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>For Saano 🌸</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,400;1,600&family=Lora:ital,wght@0,400;1,400&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(145deg,
+        #ff6eb4 0%,
+        #ff3cac 18%,
+        #e040fb 45%,
+        #be2edd 68%,
+        #7c3aed 100%
+      );
+      font-family: 'Lora', Georgia, serif;
+      position: relative;
+    }
+
+    /* ── Floating background petals ── */
+    .bg-petals { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .fp {
+      position: absolute;
+      top: -60px;
+      opacity: 0;
+      font-size: 1.1rem;
+      animation: fp-fall linear infinite;
+      will-change: transform, opacity;
+    }
+    @keyframes fp-fall {
+      0%   { opacity: 0;    transform: translate(0, 0) rotate(0deg); }
+      8%   { opacity: 0.45; }
+      90%  { opacity: 0.35; }
+      100% { opacity: 0;    transform: translate(var(--dx), 108vh) rotate(400deg); }
+    }
+
+    /* ── Giant corner flower ── */
+    .corner-flower {
+      position: fixed;
+      top: -60px;
+      left: -60px;
+      font-size: 13rem;
+      line-height: 1;
+      z-index: 2;
+      pointer-events: none;
+      opacity: 0;
+      filter: drop-shadow(0 12px 32px rgba(255,60,172,0.45));
+      animation:
+        flowerEntry 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards,
+        flowerBreath 4s ease-in-out 1.6s infinite;
+      transform-origin: top left;
+    }
+    @keyframes flowerEntry {
+      from { opacity: 0; transform: scale(0.6) rotate(-15deg); }
+      to   { opacity: 1; transform: scale(1) rotate(0deg); }
+    }
+    @keyframes flowerBreath {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50%       { transform: scale(1.04) rotate(3deg); }
+    }
+
+    /* ── Page layout ── */
+    .page {
+      position: relative;
+      z-index: 3;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 100px 20px 60px;
+    }
+
+    /* ── Letter Card ── */
+    .letter-card {
+      width: 100%;
+      max-width: 400px;
+      background: rgba(255, 248, 252, 0.96);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 24px;
+      padding: 38px 28px 42px;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.5),
+        0 8px 32px rgba(190, 46, 221, 0.25),
+        0 32px 80px rgba(124, 58, 237, 0.2),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(28px) scale(0.97);
+      animation: cardEntry 1s cubic-bezier(0.22, 1, 0.36, 1) 0.8s forwards;
+    }
+
+    @keyframes cardEntry {
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Subtle ruled lines on the card */
+    .letter-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        transparent, transparent 31px,
+        rgba(230, 100, 180, 0.08) 31px, rgba(230, 100, 180, 0.08) 32px
+      );
+      border-radius: 24px;
+      pointer-events: none;
+    }
+
+    /* Pink left margin */
+    .letter-card::after {
+      content: '';
+      position: absolute;
+      left: 54px;
+      top: 24px;
+      bottom: 24px;
+      width: 1.5px;
+      background: linear-gradient(to bottom, transparent, #f48fb180, transparent);
+      pointer-events: none;
+    }
+
+    /* ── Date ── */
+    .date {
+      font-family: 'Dancing Script', cursive;
+      font-size: 0.8rem;
+      color: #b03080;
+      text-align: right;
+      margin-bottom: 18px;
+      letter-spacing: 0.05em;
+      opacity: 0;
+      animation: fadeIn 0.6s ease 1.7s forwards;
+    }
+
+    /* ── Salutation ── */
+    .salutation {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-style: italic;
+      font-size: 1.7rem;
+      color: #c2185b;
+      margin-bottom: 22px;
+      line-height: 1.15;
+      min-height: 2em;
+    }
+
+    /* ── Body ── */
+    .body-text {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 0.93rem;
+      color: #3b1022;
+      line-height: 1.9;
+      letter-spacing: 0.012em;
+    }
+
+    .body-text p {
+      margin-bottom: 15px;
+    }
+
+    em.pink { color: #c2185b; font-style: italic; font-weight: 500; }
+
+    /* ── Sign-off ── */
+    .signoff {
+      margin-top: 26px;
+      text-align: right;
+      opacity: 0;
+    }
+    .signoff-line {
+      font-family: 'Lora', Georgia, serif;
+      font-style: italic;
+      font-size: 0.85rem;
+      color: #8c3060;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .signoff-name {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2rem;
+      color: #c2185b;
+      line-height: 1.1;
+    }
+
+    /* ── Typewriter cursor ── */
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: #c2185b;
+      vertical-align: text-bottom;
+      margin-left: 1px;
+      animation: blink 0.75s step-end infinite;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* ── Shared ── */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* Bottom petal strip */
+    .petal-strip {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 24px;
+      font-size: 1.2rem;
+      opacity: 0;
+    }
+    .petal-strip span {
+      display: inline-block;
+      animation: bobble 2.5s ease-in-out infinite;
+    }
+    .petal-strip span:nth-child(2) { animation-delay: 0.3s; }
+    .petal-strip span:nth-child(3) { animation-delay: 0.6s; }
+    .petal-strip span:nth-child(4) { animation-delay: 0.9s; }
+    .petal-strip span:nth-child(5) { animation-delay: 1.2s; }
+    @keyframes bobble {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-5px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .corner-flower { animation: flowerEntry 1s ease forwards; }
+      .fp, .cursor   { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background floating petals -->
+  <div class="bg-petals" id="bgPetals"></div>
+
+  <!-- Giant corner flower -->
+  <div class="corner-flower">🌸</div>
+
+  <div class="page">
+    <div class="letter-card">
+
+      <div class="date" id="dateEl">June 15, 2025 ✦</div>
+
+      <div class="salutation" id="salutation"></div>
+
+      <div class="body-text" id="bodyText"></div>
+
+      <div class="signoff" id="signoff">
+        <span class="signoff-line">very very very proud of you,</span>
+        <span class="signoff-name">Minimeter 🌸</span>
+      </div>
+
+      <div class="petal-strip" id="petalStrip">
+        <span>🌸</span><span>✨</span><span>💗</span><span>✨</span><span>🌸</span>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    /* ── Background petals ── */
+    const bgEl = document.getElementById('bgPetals');
+    const petalEmojis = ['🌸','🌷','🌺'];
+    for (let i = 0; i < 18; i++) {
+      const d = document.createElement('div');
+      d.className = 'fp';
+      d.textContent = petalEmojis[i % 3];
+      const dur  = 9 + Math.random() * 10;
+      const del  = Math.random() * 14;
+      const left = Math.random() * 100;
+      const dx   = (Math.random() - 0.5) * 90;
+      d.style.cssText = `left:${left}%;font-size:${0.8+Math.random()*0.8}rem;--dx:${dx}px;animation-duration:${dur}s;animation-delay:${del}s;`;
+      bgEl.appendChild(d);
+    }
+
+    /* ── Typewriter engine ── */
+    function typewriterSequence(steps) {
+      let stepIdx = 0;
+
+      function runStep() {
+        if (stepIdx >= steps.length) return;
+        const { el, text, speed = 28, html = false, onDone } = steps[stepIdx++];
+
+        if (html) {
+          // For HTML content, type raw visible characters only (strip tags for typing then reveal)
+          el.innerHTML = '';
+          const stripped = text.replace(/<[^>]+>/g, '');
+          let i = 0;
+          const cursor = document.createElement('span');
+          cursor.className = 'cursor';
+          el.appendChild(cursor);
+
+          const iv = setInterval(() => {
+            if (i >= stripped.length) {
+              clearInterval(iv);
+              el.innerHTML = text; // Reveal with full HTML
+              if (onDone) onDone();
+              runStep();
+              return;
+            }
+            cursor.remove();
+            el.innerHTML = stripped.slice(0, ++i);
+            el.appendChild(cursor);
+          }, speed);
+        } else {
+          el.textContent = '';
+          let i = 0;
+          const cursor = document.createElement('span');
+          cursor.className = 'cursor';
+          el.appendChild(cursor);
+
+          const iv = setInterval(() => {
+            if (i >= text.length) {
+              clearInterval(iv);
+              cursor.remove();
+              if (onDone) onDone();
+              runStep();
+              return;
+            }
+            cursor.remove();
+            el.textContent = text.slice(0, ++i);
+            el.appendChild(cursor);
+          }, speed);
+        }
+      }
+
+      runStep();
+    }
+
+    /* ── Build paragraphs ── */
+    const bodyEl = document.getElementById('bodyText');
+    const paragraphs = [
+      `I know I've already told you this quite a few times… but after hearing that you're doing your <em class="pink">second presentation today</em>, I felt like saying it again!`,
+      `I'm genuinely <em class="pink">soo happy</em> for you. It's amazing to know that one of my friends is earning through her own hard work now! You've worked for this, and seeing you take these steps forward makes me <em class="pink">really really happy</em>.`,
+      `Make sure you celebrate every small win, enjoy every bit of this journey, and take a moment to appreciate <em class="pink">how far you've already come</em>.`,
+      `Wishing you all the very best of luck for today's presentation and for all the presentations, projects, and opportunities that come your way 💗`
+    ];
+
+    const pEls = paragraphs.map(() => {
+      const p = document.createElement('p');
+      bodyEl.appendChild(p);
+      return p;
+    });
+
+    /* ── Sequence: salutation → paragraphs → signoff ── */
+    const salEl = document.getElementById('salutation');
+    const signoff = document.getElementById('signoff');
+    const petalStrip = document.getElementById('petalStrip');
+
+    // Kick off after card animates in (0.8s delay + ~1s animation = ~1.9s)
+    setTimeout(() => {
+
+      typewriterSequence([
+        {
+          el: salEl,
+          text: 'Saano,',
+          speed: 120, // Slowed down from 80 for a natural pace
+          onDone: () => {}
+        },
+        // paragraph 1
+        {
+          el: pEls[0],
+          text: paragraphs[0],
+          html: true,
+          speed: 38 // Slowed down from 18
+        },
+        {
+          el: pEls[1],
+          text: paragraphs[1],
+          html: true,
+          speed: 38 // Slowed down from 16
+        },
+        {
+          el: pEls[2],
+          text: paragraphs[2],
+          html: true,
+          speed: 38 // Slowed down from 18
+        },
+        {
+          el: pEls[3],
+          text: paragraphs[3],
+          html: true,
+          speed: 38, // Slowed down from 18
+          onDone: () => {
+            // Reveal signoff
+            signoff.style.transition = 'opacity 1s ease';
+            signoff.style.opacity = '1';
+
+            setTimeout(() => {
+              petalStrip.style.transition = 'opacity 0.8s ease';
+              petalStrip.style.opacity = '1';
+            }, 800);
+          }
+        }
+      ]);
+
+    }, 1900);
+  </script>
+</body>
+</html>
+
